@@ -1,0 +1,59 @@
+﻿@using TaskManagers.Models
+@model WorkTask
+
+<h1>Create Task</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Deadline"></label>
+        <input asp-for="Deadline" type="datetime-local" class="form-control" />
+        <span asp-validation-for="Deadline" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Priority"></label>
+        <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control"></select>
+        <span asp-validation-for="Priority" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TaskTypeId">Task Type</label>
+        <select asp-for="TaskTypeId" asp-items="ViewBag.TaskTypes" class="form-control">
+            <option value="">-- Select Task Type --</option>
+        </select>
+        <span asp-validation-for="TaskTypeId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Assignees</label>
+        <select name="selectedWorkers" multiple class="form-control">
+            @foreach (var worker in ViewBag.Workers)
+            {
+                <option value="@worker.Value">@worker.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

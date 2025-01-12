@@ -1,0 +1,42 @@
+﻿@using TaskManagers.Models
+@model IEnumerable<WorkTask>
+
+<h1>Tasks</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Task</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Deadline)</th>
+            <th>@Html.DisplayNameFor(model => model.IsCompleted)</th>
+            <th>@Html.DisplayNameFor(model => model.Priority)</th>
+            <th>@Html.DisplayNameFor(model => model.TaskType)</th>
+            <th>Assignees</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Deadline)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsCompleted)</td>
+                <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                <td>@Html.DisplayFor(modelItem => item.TaskType.Name)</td>
+                <td>
+                    @string.Join(", ", item.Assignees.Select(a => a.Username))
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
