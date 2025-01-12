@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: taskmanagers-pod
+  labels:
+    app: taskmanagers
+spec:
+  containers:
+  # Основний контейнер з додатком
+  - name: taskmanagers-app
+    image: taskmanagers:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /app/logs
+    - name: db-storage
+      mountPath: /app/Data
+    env:
+    - name: ASPNETCORE_URLS
+      value: "http://0.0.0.0:80"
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Production"
+
+  # Контейнер для обробки логів
+  - name: log-processor
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "tail -f /shared-logs/*.log"]
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /shared-logs
+
+  volumes:
+  - name: shared-logs
+    emptyDir: {}
+  - name: db-storage
+    persistentVolumeClaim:
+      claimName: taskmanagers-pvc
